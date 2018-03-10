@@ -1,0 +1,22 @@
+{
+    "name": "auth",
+    "description": "end to end food services platform",
+    "image": "",
+    "repository": "https://github.com/theydonthaveit/auth-no-pass",
+    "keywords": ["python", "flask", "authentication", "psql" ],
+    "addons": [ "heroku-postgresql" ],
+    "env": {
+        "SECRET_KEY": {
+            "description": "none",
+            "generator": "secret"
+        }
+    },
+    "environments": {
+        "test": {
+            "scripts": {
+                "test-setup": "",
+                "test": ""
+            }
+        }
+    }
+}
