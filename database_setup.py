@@ -48,5 +48,4 @@ class UserAccount(Base, BaseMixin):
         return pbkdf2_sha512.verify(password, self.password)
 
 
-Engine = create_engine('postgres://xlvroomeimshcb:e99dcf87bf5161aa4be30fcfd7c3835f96da539f8ecde9e9c61405c125ada391@ec2-54-247-81-88.eu-west-1.compute.amazonaws.com:5432/d8j46e8flvv4gv')
 Base.metadata.create_all(Engine)
