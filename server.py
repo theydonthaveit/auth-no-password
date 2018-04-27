@@ -2,6 +2,8 @@ import smtplib
 import datetime
 import time
 import base64
+import json
+import jwt
 
 from email.mime.text import MIMEText
 from flask import Flask, request, redirect, url_for
@@ -21,25 +23,41 @@ session = DBsession()
 app = Flask(__name__)
 app.secret_key='super'
 
+secret_key = 'chicken'
 
-# def decode_jwt():
-#     # this will involve decoding
-#     return True
+def decode_jwt(encoded_jwt):
+    decode = jwt.decode(encoded_jwt, secret_key, algorithms=['HS256'])
+    return decode
 
-# def check_inactivitey():
-#     inactive = 600
-#     return True
+def check_inactivitey(it, exp, uid):
+    # check inactivity
+    current_time = time.time()
+    if current_time < exp:
+        values = validate_jwt(uid)
+        return values
+    else:
+        return 'active'
 
-# def validate_jwt():
-#     # this will involve checking
-#     return True
+def validate_jwt(uid):
+    # this will involve checking
+    if user_ids[uid] is not None:
+        if user_ids[uid] == 'active':
+            return 'we are fine'
+    else:
+        return user_ids[uid] == 'inavtive'
+
+@app.route('/jwt', methods=['POST'])
+def jwt_decode_test():
+    things = decode_jwt(request.headers["Authorization"])
+    state = check_inactivitey(things['it'], things['exp'], things['uid'])
+    return state
 
 def generate_user_id():
     return '123-456-789'
 
 def generate_jwt():
     header = {
-        "alg": "SHA512",
+        "alg": "HS256",
         "typ": "JWT"
     }
 
@@ -55,11 +73,12 @@ def generate_jwt():
         "it": it,
     }
 
-    secret = 'xxx'
-
-    signature = pbkdf2_sha512.hash(secret)
-    print(user_ids)
-    gen_jwt = b'base64.b64encode(header).base64.b64encode(payload).base64.b64encode(signature)'
+    gen_jwt = jwt.encode(
+        payload,
+        secret_key,
+        algorithm='HS256',
+        headers=header
+    )
 
     return gen_jwt
 
@@ -79,6 +98,22 @@ def signup():
 
         def twilio_util():
 
+            client = Client("AC0e087aa2bf931060cecc7b44522dd8b1",
+                "5e77e5a337f870ca3c5c936f85ea833b")
+
+            client.messages.create(to="+447901648812",
+                from_="+447533025324",
+                body="Here is your auto_gen passcode: 888990")
+
+        twilio_util()
+
+        def send_email():
+            # Create a text/plain message
+            gmail_user = 'alanwilliamswastaken@gmail.com'
+            gmail_password = 'a@280989aW'
+
+            sent_from = gmail_user
+            to = ['theydonthaveit@gmail.com']
             subject = 'OMG Super Important Message'
             body = 'verify your account'
 
