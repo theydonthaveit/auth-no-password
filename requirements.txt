@@ -14,7 +14,7 @@ MarkupSafe==1.0
 mccabe==0.6.1
 passlib==1.7.1
 psycopg2-binary==2.7.4
-PyJWT==1.6.0
+PyJWT==2.4.0
 pylint==1.8.2
 PySocks==1.6.8
 pytz==2018.3
